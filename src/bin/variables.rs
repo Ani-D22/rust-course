@@ -2,9 +2,12 @@ fn main() {
     variable();
     mutability();
     explicit_typing();
-    shadowing();
+    shadowing1();
+    shadowing2();
+    shadowing3();
     constant();
     variable_scope();
+    challenge();
 }
 
 /*
@@ -51,7 +54,8 @@ fn explicit_typing() {
         Instead of using implicit - inference:
     */
 
-    // Use `u` for integers
+    // Use `u` for undefined integer
+    // Use `i` for integer
     let score: u32 = 65538;
     println!("Score = {}",score);
 
@@ -67,7 +71,7 @@ fn explicit_typing() {
     */
 }
 
-fn shadowing() {
+fn shadowing1() {
     /*
         Shadowing vs mut:
             - Shadowing: creates a new binding over the previous one
@@ -92,6 +96,37 @@ fn shadowing() {
     println!("spaces: {}", spaces); // prints: 3
 }
 
+fn shadowing2() {
+    let num = "42"; // &str
+    let num = num.trim(); // &str (no leading/trailing spaces)
+    let num = num.parse::<i32>().unwrap(); // i32
+
+    println!("Parsed number: {}", num);
+
+    /*
+        💬 TL;DR
+        Use Case	Use mut	Use shadowing (let x = x)
+        Reassign same type	✅	✅ (but not necessary)
+        Change type	❌ (compile error)	✅ Shadowing allows type change
+        Rebinding in block	❌	✅ Cleaner and scoped
+        Transformations	❌ (unless same type)	✅ Especially for type changes
+    */
+}
+
+fn shadowing3() {
+    let input = "123";               // &str
+    println!("input : {}", input);
+    let input = input.trim();        // &str (trimmed)
+    println!("input : {}", input);
+    let input = input.parse::<i32>().unwrap(); // i32
+    println!("input : {}", input);
+    /*
+        Here you reuse the same variable name, changing both value and type at each step. This is intentional:
+            - Cleaner pipelines
+            - Avoids name pollution (input, input_trimmed, parsed_input, finalInput, etc.)
+            - Keeps the previous bindings inaccessible after shadowing
+    */
+}
 fn constant() {
     /*
         Defined using const, must have type annotations and be set at compile-time:
@@ -120,4 +155,18 @@ fn variable_scope() {
         println!("inside scope: {}", n);
     }
     println!("outside scope: {}", n);
+}
+
+fn challenge() {
+    let mut counter = 0;
+    println!("counter: {}", counter);
+    counter += 1;
+    println!("counter: {}", counter);
+    counter += 1;
+    println!("counter: {}", counter);
+    counter += 1;
+    println!("counter: {}", counter);
+
+    let counter = "Demo counter";
+    println!("counter string: {}", counter);
 }
